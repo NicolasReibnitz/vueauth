@@ -37,7 +37,7 @@ const useUpdatePassword: UseUpdatePassword = () => {
       return
     }
     loading.value = true
-    const { error } = await supabase.auth.update({ password: form.value.password })
+    const { error } = await supabase.auth.updateUser({ password: form.value.password })
     if (error) setErrorsFromResponse(error)
     loading.value = false
   }

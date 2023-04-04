@@ -77,7 +77,7 @@ const useAuthRedirector: UseAuthRedirector = (
       handleAuthenticatedRedirect()
 
       checking.value = false
-      data?.unsubscribe()
+      data?.subscription.unsubscribe()
     })
   }
 

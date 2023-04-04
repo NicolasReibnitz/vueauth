@@ -33,7 +33,7 @@ const useIdentityPasswordLogin: UseIdentityPasswordLogin = () => {
 
   const login = async () => {
     loading.value = true
-    const { error } = await supabase.auth.signIn(form.value)
+    const { error } = await supabase.auth.signInWithPassword(form.value)
     if (error) setErrorsFromResponse(error)
     loading.value = false
   }

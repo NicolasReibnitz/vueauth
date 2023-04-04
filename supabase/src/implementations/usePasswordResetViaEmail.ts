@@ -34,7 +34,7 @@ const usePasswordResetViaEmail: UsePasswordResetViaEmail = () => {
 
   const requestReset = async () => {
     loading.value = true
-    const { error } = await auth.api.resetPasswordForEmail(requestForm.value.email, {
+    const { error } = await auth.resetPasswordForEmail(requestForm.value.email, {
       redirectTo: window.location.origin + '/password-reset',
     })
     if (error) setErrorsFromResponse(error)
@@ -44,21 +44,21 @@ const usePasswordResetViaEmail: UsePasswordResetViaEmail = () => {
 
   const reset = async () => {
     loading.value = true
-    const { error } = await auth.api.updateUser(
-      getAccessToken(),
+    const { error } = await auth.updateUser(
+    //   getAccessToken(),
       { password: resetPasswordForm.value.password },
     )
     if (error) setErrorsFromResponse(error)
     loading.value = false
   }
 
-  function getAccessToken (): string {
-    const session = auth.session()
-    if (!session) {
-      throw new Error('Missing session data. Ensure the password reset link is correct.')
-    }
-    return session.access_token
-  }
+//   function getAccessToken (): string {
+//     const session = auth.session()
+//     if (!session) {
+//       throw new Error('Missing session data. Ensure the password reset link is correct.')
+//     }
+//     return session.access_token
+//   }
 
   return {
     requestForm,

@@ -17,8 +17,10 @@ const useFetchUser: UseFetchUser = () => {
 
   function fetch () {
     return new Promise(resolve => {
-      const user = supabase.auth.user()
-      resolve(user)
+    // const user = 
+      supabase.auth.getUser().then(({data}) => resolve(data?.user));
+    //   const user = supabase.auth.user()
+    //   resolve(user)
     })
   }
 

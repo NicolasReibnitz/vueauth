@@ -1,12 +1,12 @@
 import { UseHandlesErrors, useHandlesErrorsBase } from '@vueauth/core'
-import { ApiError } from '@supabase/supabase-js'
+import { AuthError } from '@supabase/supabase-js'
 
 const useHandlesErrors: UseHandlesErrors = () => {
   const errorService = useHandlesErrorsBase()
 
   const { resetErrors, errors } = errorService
 
-  function fromResponse (error: ApiError) {
+  function fromResponse (error: AuthError) {
     resetErrors()
     errors.value.push({
       type: `CODE: ${error.status}`,
