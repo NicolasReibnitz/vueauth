@@ -1,51 +1,15 @@
-import { createClient } from '@supabase/supabase-js';
-import { effectScope, ref, computed, inject, unref, watch } from 'vue-demi';
+import { inject, ref, computed, unref, effectScope, watch } from 'vue-demi';
 import { useRouter } from 'vue-router';
 
 const SupabaseClientKey = Symbol('SupabaseDefaultClient');
 
-var _a;
-const isClient = typeof window !== "undefined";
-isClient && ((_a = window == null ? void 0 : window.navigator) == null ? void 0 : _a.userAgent) && /iP(ad|hone|od)/.test(window.navigator.userAgent);
-
-function createGlobalState(stateFactory) {
-  let initialized = false;
-  let state;
-  const scope = effectScope(true);
-  return () => {
-    if (!initialized) {
-      state = scope.run(stateFactory);
-      initialized = true;
-    }
-    return state;
-  };
-}
-
-const useAuthState = createGlobalState(() => {
-    const user = ref(null);
-    const isAuthenticated = computed(() => !!user.value);
-    const authIsReady = ref(true);
-    return {
-        authIsReady,
-        isAuthenticated,
-        user,
-    };
-});
-
 const SupabasePlugin = {
     install: (vueApp, options) => {
-        if (!options || !options.credentials || !options.credentials.supabaseKey || !options.credentials.supabaseUrl) {
-            throw Error('Credentials must be provided when installing supabase');
+        if (!options || !options.supabaseInstance) {
+            throw Error('Supabase instance must be provided');
         }
-        const { supabaseUrl, supabaseKey } = options.credentials;
-        const client = createClient(supabaseUrl, supabaseKey);
-        const { user, authIsReady } = useAuthState();
-        client.auth.onAuthStateChange((_, session) => {
-            authIsReady.value = true;
-            user.value = session?.user ?? null;
-        });
-        vueApp.provide(SupabaseClientKey, client);
-    },
+        vueApp.provide(SupabaseClientKey, options.supabaseInstance);
+    }
 };
 
 const useClient = () => {
@@ -188,6 +152,34 @@ const useIdentityPasswordLogout = () => {
         resetErrors,
     };
 };
+
+var _a;
+const isClient = typeof window !== "undefined";
+isClient && ((_a = window == null ? void 0 : window.navigator) == null ? void 0 : _a.userAgent) && /iP(ad|hone|od)/.test(window.navigator.userAgent);
+
+function createGlobalState(stateFactory) {
+  let initialized = false;
+  let state;
+  const scope = effectScope(true);
+  return () => {
+    if (!initialized) {
+      state = scope.run(stateFactory);
+      initialized = true;
+    }
+    return state;
+  };
+}
+
+const useAuthState = createGlobalState(() => {
+    const user = ref(null);
+    const isAuthenticated = computed(() => !!user.value);
+    const authIsReady = ref(true);
+    return {
+        authIsReady,
+        isAuthenticated,
+        user,
+    };
+});
 
 const useIdentityPasswordRegister = () => {
     const supabaseClient = useClient();

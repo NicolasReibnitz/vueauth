@@ -1,32 +1,19 @@
-import { App } from 'vue-demi'
-import { createClient } from '@supabase/supabase-js'
-import { SupabaseClientKey } from './types/symbols'
-import { useAuthState } from './implementations/useAuthState'
+import type { App } from 'vue-demi';
+import type { SupabaseClient } from '@supabase/supabase-js';
+import { SupabaseClientKey } from './types/symbols';
 
 export interface VuePluginOptions {
-  credentials: {
-    supabaseUrl: string,
-    supabaseKey: string
-  }
+	supabaseInstance: SupabaseClient;
 }
 
 export const SupabasePlugin = {
-  install: (vueApp: App, options: VuePluginOptions) => {
-    if (!options || !options.credentials || !options.credentials.supabaseKey || !options.credentials.supabaseUrl) {
-      throw Error('Credentials must be provided when installing supabase')
-    }
-    const { supabaseUrl, supabaseKey } = options.credentials
-    const client = createClient(supabaseUrl, supabaseKey)
+	install: (vueApp: App, options: VuePluginOptions): void => {
+		if (!options || !options.supabaseInstance) {
+			throw Error('Supabase instance must be provided');
+		}
 
-    const { user, authIsReady } = useAuthState()
+		vueApp.provide(SupabaseClientKey, options.supabaseInstance);
+	}
+};
 
-    client.auth.onAuthStateChange((_, session) => {
-      authIsReady.value = true
-      user.value = session?.user ?? null
-    })
-
-    vueApp.provide(SupabaseClientKey, client)
-  },
-}
-
-export default SupabasePlugin
+export default SupabasePlugin;

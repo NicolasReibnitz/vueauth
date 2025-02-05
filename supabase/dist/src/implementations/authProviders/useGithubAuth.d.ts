@@ -1,8 +1,11 @@
 export declare const useGithubAuth: () => {
     signIn: () => Promise<void>;
-    loading: import("vue-demi").Ref<boolean>;
-    hasErrors: import("vue-demi").ComputedRef<boolean>;
-    errors: import("vue-demi").Ref<{
+    loading: import("vue").Ref<boolean, boolean>;
+    hasErrors: import("vue").ComputedRef<boolean>;
+    errors: import("vue").Ref<{
+        type: string;
+        message: string;
+    }[], {
         type: string;
         message: string;
     }[]>;

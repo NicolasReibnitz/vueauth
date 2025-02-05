@@ -1,9 +1,7 @@
 import { App } from 'vue-demi';
+import type { SupabaseClient } from '@supabase/supabase-js';
 export interface VuePluginOptions {
-    credentials: {
-        supabaseUrl: string;
-        supabaseKey: string;
-    };
+    supabaseInstance: SupabaseClient;
 }
 export declare const SupabasePlugin: {
     install: (vueApp: App, options: VuePluginOptions) => void;
